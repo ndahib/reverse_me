@@ -1,55 +1,72 @@
-#include <stdio.h>
+# include <stdio.h>
 # include <string.h>
-#include <stdlib.h>
+# include <stdlib.h>
+# include <stdbool.h>
 
-# define SECRET "123"
 void no(){
-    printf("Nope.");
+    printf("Nope.\n");
+    exit(1);
 }
 
 void ok(){
-    printf("Good Job!");
+    printf("Good Job!\n");
+    exit(0);
 }
-char *hidden_string = "secret_key";
 
-int main(int ac, char* av){
-    char char1, char2;
-    char input[100];
-    char *buffer;
-    int len;
-    char output[10];
 
-    printf("Enter the key: ");
-    int res_scanf = scanf("%c%c", &char1, &char2);
-    
-    if (res_scanf != 1){
+int main(){
+    char user_secret[24];
+    char buffer1[10];
+    char buffer2[4];
+    bool break_condition;
+    size_t var;
+    int scanf_ret;
+    int i, j;
+
+    printf("Enter the key:");
+
+    scanf_ret = scanf("%23s", &user_secret);
+    if (scanf_ret != 1){
         no();
     }
-    if (char1 != '0'){
+    if (user_secret[0] != '0'){
         no();
     }
-    if (char2 != '0'){
+    if (user_secret[1] != '0'){
         no();
     }
 
-    fflush(stdin);
-    memset(buffer, 0, 9);
+    fflush(0);
 
-    len = strlen(buffer);
-    int i = 0;
-    while (i++ < len){
-        char chunk[4] = {
-            
+    memset(buffer1, 0, 9);
+    buffer1[0] = 'd';
+    i = 1;
+    j = 2;
+
+    while (true){
+        break_condition = false;
+        if (strlen(buffer1) < 8){
+            var = j;
+            break_condition = var < strlen(user_secret);
         }
-        output[i] = atoi(hidden_string[i]);
+        if (!break_condition)
+            break;
+
+        buffer2[0] = user_secret[j];
+        buffer2[1] = user_secret[j + 1];
+        buffer2[2] = user_secret[j + 2];
+        buffer2[3] = '\0';
+
+        buffer1[i] = atoi(buffer2);
+        j += 3;
+        i++;
     }
-    output[i] = '\0';
-    int comparison_result = strcmp(output, SECRET);
-    if (comparison_result == 0){
+    buffer1[i] = '\0';
+    
+    if (!strcmp(buffer1, "delabere")){
         ok();
-    }
-    else
-    {
+    }else {
         no();
     }
+    return 0;
 }
